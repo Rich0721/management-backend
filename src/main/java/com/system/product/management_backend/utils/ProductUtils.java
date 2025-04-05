@@ -5,8 +5,8 @@ import java.time.Instant;
 public class ProductUtils {
     
     public static String generateProductCode(){
-        long unixTime = Instant.now().getEpochSecond();
+        long unixTime = Instant.now().toEpochMilli();
 
-        return String.format("%012d", unixTime);
+        return String.format("%013d", unixTime);
     }
 }

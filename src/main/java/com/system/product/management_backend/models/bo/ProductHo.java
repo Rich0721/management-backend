@@ -7,10 +7,13 @@ import lombok.Setter;
 
 @Setter
 @Getter
-public class Product {
+public class ProductHo {
 
     // Product ID
     private String code;
+
+    // Proudct cost
+    private int cost;
 
     // Product price
     private int price;

@@ -4,77 +4,58 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import com.system.product.management_backend.models.bo.Product;
-import com.system.product.management_backend.models.dao.ProductCodeDao;
-import com.system.product.management_backend.models.dao.ProductDetailDao;
-import com.system.product.management_backend.models.dao.ProductImageDao;
-import com.system.product.management_backend.models.ho.ProductCodeHo;
-import com.system.product.management_backend.models.ho.ProductDetailHo;
+import com.system.product.management_backend.models.bo.ProductHo;
+import com.system.product.management_backend.models.dao.ProductDao;
 import com.system.product.management_backend.utils.ProductUtils;
 
 @Service
+@SuppressWarnings("deprecation")
 public class EditProductService {
 
     @Autowired
-    private ProductCodeDao productCodeDao;
+    private ProductDao productDao;
 
-    @Autowired
-    private ProductImageDao productImageDao;
-
-    @Autowired
-    private ProductDetailDao productDetailDao;
-    
-    public Product updateProduct(Product product) {
-        // Connect Database and update product information
+    @Transactional(rollbackFor = Exception.class)
+    public ProductHo updateProduct(ProductHo product) {
         if (product.getCode().isEmpty()) {
-            this.insertProductCode(product);
-            this.insertProductImage(product.getCode(), product.getImages());
-            this.insertProductDetail(product.getCode(), product);
+            this.saveProductCode(product);
+            this.saveProductImage(product.getCode(), product.getImages());
+            productDao.saveProductDetail(product);
+        } else {
+            productDao.updateProductDetail(product);
+            productDao.deleteProductImage(product.getCode());
+            this.saveProductImage(product.getCode(), product.getImages());
         }
         return product;
     }
 
-    public Product insertProductCode(Product product) {
-        // Connect Database and insert product information
-        ProductCodeHo productCodeHo = new ProductCodeHo();
-        productCodeHo.setCode(ProductUtils.generateProductCode());
-        productCodeHo.setName(product.getName());
-        productCodeDao.insertProductCode(productCodeHo);
-        product.setCode(productCodeHo.getCode());
+    public ProductHo saveProductCode(ProductHo product) {
+        String code = ProductUtils.generateProductCode();
+        productDao.saveProductCode(code, product.getName());
+        product.setCode(code);
         return product;
     }
 
-    public void insertProductImage(String code, List<String> imageEncode) {
+    public void saveProductImage(String code, List<String> imageEncode) {
         if (imageEncode == null || imageEncode.isEmpty()) {
             return;
         }
-        imageEncode.stream().forEach(image -> productImageDao.insertProductImage(code, image));
+        imageEncode.stream().forEach(image -> productDao.saveProductImage(code, image));
     }
 
-    public void insertProductDetail(String code, Product product) {
-        if (product.getDescription() == null || product.getDescription().isEmpty()) {
-            return;
-        }
-        ProductDetailHo productDetailHo = new ProductDetailHo();
-        productDetailHo.setPrice(product.getPrice());
-        productDetailHo.setDescription(product.getDescription());
-        productDetailHo.setContent(product.getContent());
-        productDetailDao.insertProductDetail(code, productDetailHo);
+    public ProductHo getProduct(String code) {
+        ProductHo product = productDao.getProductByCode(code) ;
+        product.setImages(productDao.getProductImage(code));
+        return product;
     }
 
-
-    public Product getProduct(String code) {
-        // Mock product for demonstration purposes
-        Product product = new Product();
-        product.setCode(code);
-        product.setContent( " <p>Content</p>");
-        product.setName("乃木坂46");
-        product.setDescription("Test Description");
-        product.setPrice(100);
-        product.setCategory("女子偶像團體");
-        
-        // product.setImages(List.of(test));
+    public List<ProductHo> getAllProduct() {
+        List<ProductHo> product = productDao.getAllProduct() ;
+        product.forEach(p -> {
+            p.setImages(productDao.getProductImage(p.getCode()));
+        });
         return product;
     }
 }
