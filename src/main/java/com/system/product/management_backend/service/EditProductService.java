@@ -6,8 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.system.product.management_backend.models.bo.ProductHo;
 import com.system.product.management_backend.models.dao.ProductDao;
+import com.system.product.management_backend.models.dao.StockDao;
+import com.system.product.management_backend.models.ho.ProductHo;
 import com.system.product.management_backend.utils.ProductUtils;
 
 @Service
@@ -17,12 +18,16 @@ public class EditProductService {
     @Autowired
     private ProductDao productDao;
 
+    @Autowired
+    private StockDao stockDao;
+
     @Transactional(rollbackFor = Exception.class)
     public ProductHo updateProduct(ProductHo product) {
         if (product.getCode().isEmpty()) {
             this.saveProductCode(product);
             this.saveProductImage(product.getCode(), product.getImages());
             productDao.saveProductDetail(product);
+            stockDao.initStockData(product.getCode(), product.getName());
         } else {
             productDao.updateProductDetail(product);
             productDao.deleteProductImage(product.getCode());

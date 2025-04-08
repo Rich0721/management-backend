@@ -1,13 +1,15 @@
-package com.system.product.management_backend.models.bo;
+package com.system.product.management_backend.models.ho;
 
 import java.util.List;
+
+import com.system.product.management_backend.models.ho.basic.BasicProduct;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @Setter
 @Getter
-public class ProductHo {
+public class ProductHo extends BasicProduct {
 
     // Product ID
     private String code;
@@ -17,9 +19,6 @@ public class ProductHo {
 
     // Product price
     private int price;
-    
-    // Product name
-    private String name;
 
     // Product description
     private String description;

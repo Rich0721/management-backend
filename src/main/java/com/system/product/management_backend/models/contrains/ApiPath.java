@@ -1,0 +1,16 @@
+package com.system.product.management_backend.models.contrains;
+
+public class ApiPath {
+
+    /** Edit Product */
+    public static final String EDIT = "/edit";
+
+    /** Edit Product Introduce */
+    public static final String GET_PRODUCT = "/getProduct/{code}";
+    public static final String UPDATE_PRODUCT = "/updateProduct";
+    public static final String GET_ALL_PRODUCT = "/getAllProduct";
+
+    /** Edit Product Stock */
+    public static final String UPDATE_STOCK_PRODUCT = "/updateStockProduct";
+    public static final String GET_STOCK_PRODUCT = "/getStockProduct/{code}"; 
+}
