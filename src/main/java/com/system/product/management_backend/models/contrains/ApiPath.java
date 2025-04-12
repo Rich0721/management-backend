@@ -12,5 +12,7 @@ public class ApiPath {
 
     /** Edit Product Stock */
     public static final String UPDATE_STOCK_PRODUCT = "/updateStockProduct";
-    public static final String GET_STOCK_PRODUCT = "/getStockProduct/{code}"; 
+    public static final String GET_STOCK_PRODUCT = "/getStockProduct";
+    public static final String DOWNLOAD_EXCEL = "/downloadProductExcel";
+    public static final String DOWNLOAD_QR_CODE = "/downloadQRCode";
 }
