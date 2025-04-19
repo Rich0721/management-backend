@@ -8,10 +8,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.system.product.management_backend.service.EditProductService;
 import com.system.product.management_backend.models.contrains.ApiPath;
 import com.system.product.management_backend.models.ho.ProductHo;
+import com.system.product.management_backend.service.EditProductService;
 
 
 /**
@@ -26,7 +25,7 @@ public class EditProductController {
 
     @Autowired
     private EditProductService editProductService;
-    
+
     @GetMapping(ApiPath.GET_PRODUCT)
     public ResponseEntity<ProductHo> getProduct(@PathVariable String code) {
         return ResponseEntity.ok(editProductService.getProduct(code));
